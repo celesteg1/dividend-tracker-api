@@ -4,7 +4,8 @@
   "description": "This API serves the dividend tracker app",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test-valid.js",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -24,4 +25,5 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
   }
+  
 }
