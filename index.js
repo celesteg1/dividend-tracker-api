@@ -1,5 +1,11 @@
 const express = require('express');
 const app = express();
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger'); 
+
+// Middleware
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 
 app.use(express.json());
 
@@ -7,13 +13,13 @@ app.use(express.json());
 app.use((req, res, next) => {
     if (req.headers['content-type'] && !req.headers['content-type'].includes('application/json')) {
         return res.status(415).json({
-            error: 'Expected application/json. Please check your request content type.',
+            error: 'Expected content-type application/json.',
         });
     }
     next(); // Continue if content type is JSON
 });
 
-// Error-handling middleware for JSON parse errors
+// Error-handling middleware for incorrect JSON format
 app.use((err, req, res, next) => {
     if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
         return res.status(400).json({
@@ -23,31 +29,14 @@ app.use((err, req, res, next) => {
     next(err);  // Pass unhandled errors to any other middleware (if present)
 });
 
-// Simple health check or root route
-app.get('/', (req, res) => {
-    res.send('Hello API!');
-});
-  
-app.post('/monthly-summary', (req, res) => {
-    const data = req.body; // Expecting array of { ticker, paymentDate, amount }
-    
-    if (!data || !Array.isArray(data)) {
-        return res.status(400).json({
-            error: 'Expected application/json with an array of dividend entries.',
-        });
-    }
+//Health check
+const healthCheckRoutes = require('./routes/healthCheck');
+app.use('/', healthCheckRoutes);
 
-    const summary = {};
 
-    data.forEach( reqEntry => {
-        const date = new Date(reqEntry.paymentDate);
-        const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`; //extract the year and month e.g. 2025-04 and use it as the key
-        summary[key] = (summary[key] || 0) + reqEntry.amount; //add up the amount for each month 
-    });
-
-    res.json(summary); // return the json object of summed-up amounts per month
-
-}); // /monthly-summary Endpoint
+//Calculates monthly dividend totals
+const monthlySummaryRoutes = require('./routes/monthlySummary');
+app.use('/', monthlySummaryRoutes);
 
 
 // Server start
