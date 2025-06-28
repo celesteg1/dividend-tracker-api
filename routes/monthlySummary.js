@@ -3,7 +3,7 @@ const router = express.Router();
 
 
 /**
- * @swagger
+ * @openapi
  * /monthly-summary:
  *   post:
  *     summary: Calculate total dividends received per month.
@@ -44,9 +44,9 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               type: object
- *               patternProperties:
- *                 "^[0-9]{4}-(0[1-9]|1[0-2])$":
- *                   type: number
+ *               additionalProperties:
+ *                 type: number
+ *                 description: Keys are months formatted as YYYY-MM, e.g., "2024-01", "2024-05"
  *             example:
  *               "2024-01": 3.5
  *               "2024-05": 0.27

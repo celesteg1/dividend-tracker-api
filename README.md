@@ -134,7 +134,7 @@ You can optionally test this API using the JavaScript files provided.
 Responds with "Health check successful" if it can reach the endpoint "http://localhost:3000/".
 
 ```bash
-node test-health.js
+node scripts/test-health.js
 ```
 
 Test response:
@@ -148,7 +148,7 @@ Health check successful: Hello API!
 Responds with the aggregated monthly totals in JSON format.
 
 ```bash 
-node test-valid.js
+node scripts/test-valid.js
 ```
 
 Test response:
@@ -162,7 +162,7 @@ Test response:
 Responds with "Invalid JSON. Please check your request body format." error message.
 
 ```bash
-node test-invalid.js
+node scripts/test-invalid.js
 ```
 
 Test response:
@@ -176,13 +176,21 @@ API responded with error: {
 ### 📁 Project Structure
 
 ```pgsql
-dividend-tracker-api/
+dividend-tracker-api
+├── LICENSE
+├── README.md
+├── icon.png
 ├── index.js
+├── package-lock.json
 ├── package.json
-├── test-health.js
-├── test-valid.js
-├── test-invalid.js
-└── README.md
+├── routes
+│   ├── healthCheck.js
+│   └── monthlySummary.js
+└── scripts
+    ├── swagger.js
+    ├── test-health.js
+    ├── test-invalid.js
+    └── test-valid.jsH
 
 ```
 

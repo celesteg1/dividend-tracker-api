@@ -1,0 +1,98 @@
+openapi: 3.0.0
+info:
+  title: Dividend Tracker API
+  version: 1.0.0
+  description: API for tracking dividend income.
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+components:
+  responses:
+    BadRequest:
+      description: Malformed JSON or missing required fields.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid JSON. Please check your request body format.
+    UnsupportedMediaType:
+      description: Unsupported content type.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Expected content-type application/json.
+paths:
+  /:
+    get:
+      summary: Health check endpoint
+      description: Returns a simple message to confirm that the API is running.
+      responses:
+        "200":
+          description: API is running
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Hello API!
+  /monthly-summary:
+    post:
+      summary: Calculate total dividends received per month.
+      description: >
+        Accepts a list of dividend payments and returns the total dividend
+        income grouped by month and year. Each payment should include the ticker
+        symbol, payment date (formatted as YYYY-MM-DD), and amount received.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                required:
+                  - ticker
+                  - paymentDate
+                  - amount
+                properties:
+                  ticker:
+                    type: string
+                    description: The stock ticker symbol (e.g., AAPL, MSFT).
+                    example: AAPL
+                  paymentDate:
+                    type: string
+                    format: date
+                    description: Date the dividend was paid. Use the format YYYY-MM-DD.
+                    example: 2024-01-15
+                  amount:
+                    type: number
+                    format: float
+                    description: Amount of dividend received, in the account currency.
+                    example: 1.5
+      responses:
+        "200":
+          description: Returns a summary of monthly dividend totals.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: number
+                  description: Keys are months formatted as YYYY-MM, e.g., "2024-01", "2024-05"
+              example:
+                2024-01: 3.5
+                2024-05: 0.27
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "415":
+          $ref: "#/components/responses/UnsupportedMediaType"
+tags: []

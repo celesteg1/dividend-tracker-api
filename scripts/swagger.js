@@ -9,6 +9,12 @@ const options = {
       version: '1.0.0',
       description: 'API for tracking dividend income.', 
     },
+    servers: [
+      {
+        url: 'http://localhost:3000',
+        description: 'Local development server'
+      }
+    ],
     components: {
       responses: {
         BadRequest: {
@@ -51,4 +57,6 @@ const options = {
 
 const swaggerSpec = swaggerJSDoc(options);
 module.exports = swaggerSpec;
+
+
 
