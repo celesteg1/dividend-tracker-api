@@ -1,13 +1,33 @@
 const express = require('express');
 const app = express();
 const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('./swagger'); 
+const swaggerSpec = require('./scripts/swagger'); 
 
 // Middleware
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
 app.use(express.json());
+
+
+// Serve raw JSON spec for tools like MkDocs
+app.get('/api-docs/swagger.json', (req, res) => {
+  res.json(swaggerSpec);
+});
+
+// Serve Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+
+//Health check
+const healthCheckRoutes = require('./routes/healthCheck');
+app.use('/', healthCheckRoutes);
+
+
+//Calculates monthly dividend totals
+const monthlySummaryRoutes = require('./routes/monthlySummary');
+app.use('/', monthlySummaryRoutes);
+
 
 // Error-handling middleware for unsupported content types
 app.use((req, res, next) => {
@@ -28,15 +48,6 @@ app.use((err, req, res, next) => {
     }
     next(err);  // Pass unhandled errors to any other middleware (if present)
 });
-
-//Health check
-const healthCheckRoutes = require('./routes/healthCheck');
-app.use('/', healthCheckRoutes);
-
-
-//Calculates monthly dividend totals
-const monthlySummaryRoutes = require('./routes/monthlySummary');
-app.use('/', monthlySummaryRoutes);
 
 
 // Server start

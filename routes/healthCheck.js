@@ -3,7 +3,7 @@ const router = express.Router();
 
 
 /**
- * @swagger
+ * @openapi
  * /:
  *   get:
  *     summary: Health check endpoint
@@ -12,14 +12,17 @@ const router = express.Router();
  *       200:
  *         description: API is running
  *         content:
- *           text/plain:
+ *           application/json:
  *             schema:
- *               type: string
- *               example: Hello API!
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Hello API!
  */
 
 router.get('/', (req, res) => {
-    res.type('text/plain').send('Hello API!');
+    res.json({ message: 'Hello API!' });
 });
 
 module.exports = router;

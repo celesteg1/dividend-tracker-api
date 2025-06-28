@@ -4,7 +4,7 @@
   "description": "This API serves the dividend tracker app",
   "main": "index.js",
   "scripts": {
-    "test": "node test-valid.js",
+    "test": "node scripts/test-valid.js",
     "start": "node index.js"
   },
   "repository": {
